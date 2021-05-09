@@ -1,0 +1,241 @@
+{% block content %}
+        <script src="/static/sorttable.js"></script>
+        <script src="/static/filterRecords.js"></script>
+    {% if button == "projects" %}
+      <input id="searchByProjectId" type="text" placeholder="Search by project ID" name="search">
+      {% endif %}
+
+    {% if button == "judges" %}
+      <input id="searchByJudgeId" type="text" placeholder="Search by judge ID" name="search">
+    {% endif %}
+
+    {% if button == "students" %}
+      <input id="searchByStudentId" type="text" placeholder="Search by student ID" name="search">
+    {% endif %}
+
+    {% if button == "judge_assignments" %}
+      <input id="searchByJudge_Id" type="text" placeholder="Search by judge ID" name="search">
+      <input id="searchByProject_Id" type="text" placeholder="Search by project ID" name="search">
+    {% endif %}
+
+        <table class="sortable" id="table" style="text-align:center;" cellspacing="10">
+            {% if button == "judges" %}
+            <h3>Judges</h3>
+            <thead>
+                <tr class="item">
+                    <th>Judge ID</th>
+                    <th>Judge Name</th>
+                    <th>Status</th>
+                    <th>Number of Projects Judged / Number of Projects Assigned</th>
+                </tr>
+            </thead>
+            {% endif %}
+            {% if button == "students" %}
+            <h3>Students</h3>
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>School</th>
+                    <th>Project ID</th>
+                </tr>
+            </thead>
+            {% endif %}
+            {% if button == "projects" %}
+            <h3>Projects</h3>
+            <thead>
+                <tr>
+                    <th>Project ID</th>
+                    <th>Table ID </th>
+                    <th>Project Title</th>
+                    <th>Project Category</th>
+                    <th>Avg Score</th>
+                    <th>Rank</th>
+                    <th>Z Score</th>
+                    <th>Z Score Rank</th>
+                    <th>Average 0-1</th>
+                    <th>Average 0-1 Rank</th>
+                    <th>Scaled Score</th>
+                    <th>Scaled Z</th>
+                    <th>Scaled Rank</th>
+                    <th>ISEF Score</th>
+                    <th>ISEF Rank</th>
+                    <th>Category Rank</th>
+                    <th>Fair Rank</th>
+                    <th> Status</th>
+                    <th> Number of Judges Graded / Number of Judges Assigned</th>
+                </tr>
+            </thead>
+            {% endif %}
+            {% if button == "judge_assignments" %}
+            <form action="http://127.0.0.1:8000/unassigned_judgeassignment/">
+            <button type="submit">Create New Judge Assignment</button>
+            </form>
+            <form action="http://127.0.0.1:8000/remove_judge_assignments/">
+            <button type="submit">Remove Judge</button>
+            </form>
+            <form action="http://127.0.0.1:8000/remove_project_assignments/">
+            <button type="submit">Remove Project</button>
+            </form>
+
+            <h3>Judge Assignments</h3>
+
+            <thead>
+                <tr>
+                    <th>Index</th>
+                    <th>Judge ID</th>
+                    <th>Project ID</th>
+                    <th>Goal Score</th>
+                    <th>Plan Score</th>
+                    <th>Action Score</th>
+                    <th>Result Analyis Score</th>
+                    <th>Communication Score</th>
+                    <th>Raw Score</th>
+                    <th>Z Score</th>
+                    <th>Rank Score</th>
+                </tr>
+            </thead>
+            {% endif %}
+            {% if button == "top_projects" %}
+            <h3>Top Projects</h3>
+            <thead>
+                <tr>
+                    <th>Project ID</th>
+                    <th>Project Title</th>
+                    <th>Project Category</th>
+                    <th>Category Rank</th>
+                    <th>Fair Rank</th>
+                    <th>Student Names</th>
+                </tr>
+            </thead>
+            {% endif %}
+
+
+            <tbody>
+                {% for judge in judge_list %}
+
+                <tr class="judge">
+                    <td>{{judge.judge_id}}</td>
+                    <td>{{judge.judge_name}}</td>
+
+
+
+                    {% if judge.graded  != judge.projects_assigned  %}
+
+                                        {% if judge.graded  <=  judge.projects_assigned_half  %}
+                                        <td bgcolor="#FF0000"> </td>
+                                        {% else %}
+                                        <td bgcolor="#FFFF00">  </td>
+
+                                          {% endif %}
+
+
+                    {% else %}
+                    <td bgcolor="#00FF00">  </td>
+
+                    {% endif %}
+                    <td>{{judge.graded}}  / {{judge.projects_assigned}}</td>
+                </tr>
+                {% endfor %}
+                {% for student_item in student_items %}
+                <tr class="item">
+                    <td>{{student_item.pk}}</td>
+                    <td>{{student_item.school}}</td>
+                    <td>{{student_item.project_id.project_id}}</td>
+                </tr>
+                {% endfor %}
+                {% for project in project_list %}
+                <tr class="item">
+                  <td>{{project.project_id}}</td>
+                  <td>{{project.table_id}} </td>
+                  <td>{{project.project_title}}</td>
+                  <td>{{project.project_category}}</td>
+                  <td>{{project.rank}}</td>
+                  <td>{{project.avg_score|floatformat:2}}</td>
+                  <td>{{project.z_score|floatformat:3}}</td>
+                  <td>{{project.z_score_rank}}</td>
+                  <td>{{project.avg_01|floatformat:3}}</td>
+                  <td>{{project.avg_01_rank}}</td>
+                  <td>{{project.scaled_score|floatformat:3}}</td>
+                  <td>{{project.scaled_z|floatformat:3}}</td>
+                  <td>{{project.scaled_rank|floatformat:3}}</td>
+                  <td>{{project.isef_score|floatformat:3}}</td>
+                  <td>{{project.isef_rank}}</td>
+                  <td>{{project.category_rank}}</td>
+                  <td>{{project.fair_rank}}</td>
+                  {% if project.graded != project.judges_assigned %}
+
+                  {% if project.graded  <=  project.judges_assigned_half  %}
+                  <td bgcolor="#FF0000"> </td>
+                  {% else %}
+                  <td bgcolor="#FFFF00">  </td>
+
+                    {% endif %}
+
+
+
+
+
+                  {% else %}
+                  <td bgcolor="#00FF00"> </td>
+                  {% endif %}
+                  <td>{{project.graded}}  / {{project.judges_assigned}}</td>
+                </tr>
+                {% endfor %}
+                {% for ja_item in ja_items %}
+                <tr class="item">
+                    <td>{{ja_item.pk}}</td>
+                    <td>{{ja_item.judge_id.judge_id}}</td>
+                    <td>{{ja_item.project_id.project_id}}</td>
+                    <td>{{ja_item.goal_score}}</td>
+                    <td>{{ja_item.plan_score}}</td>
+                    <td>{{ja_item.action_score}}</td>
+                    <td>{{ja_item.result_analysis_score}}</td>
+                    <td>{{ja_item.communication_score}}</td>
+                    <td>{{ja_item.raw_score}}</td>
+                    <td>{{ja_item.z_score|floatformat:3}}</td>
+                    <td>{{ja_item.rank|floatformat:2}}</td>
+                </tr>
+                {% endfor %}
+                {% for top in top_all_list %}
+                <tr class="item">
+                    <td>{{top.project_id}}</td>
+                    <td>{{top.project_title}}</td>
+                    <td>{{top.project_category}}</td>
+                    <td>{{top.category_rank}}</td>
+                    <td>{{top.fair_rank}}</td>
+                    <td>{{top.student_names}}
+                </tr>
+                {% endfor %}
+                {% for top_all_category in top_all_categories %}
+                <tr>
+                    <td></td>
+                    <td style="text-align:left;">
+                        <h2>{{top_all_category.0.project_category}}</h2>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                    {% for top in top_all_category %}
+                    <tr class="item">
+                        <td>{{top.project_id}}</td>
+                        <td>{{top.project_title}}</td>
+                        <td>{{top.project_category}}</td>
+                        <td>{{top.category_rank}}</td>
+                        <td>{{top.fair_rank}}</td>
+                        <td>{{top.student_names}}
+                    </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+
+
+{% endblock content %}
+
+    

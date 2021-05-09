@@ -1,0 +1,212 @@
+{% block content %}
+    <div align="center">
+        <h2 allign:center>Project Scoring</h2>
+    </div>
+        <form method="POST" >
+            {% csrf_token %}
+            <table style="width: 70%;" align='center'>
+            <tr>
+                <td><h3>Judge Id</h3></td>
+                <td>
+                {{ form.judge_id }}
+                </td>
+            </tr>
+            <tr>
+                <td><h3>Project Id </h3></td>
+                <td>
+                {{ form.project_id }}
+                </td>
+            </tr>
+            <tr>
+                <td><h3>Scores</h3></td>
+                <td>
+                <table style="width: 100%; max-width: 800px; table-layout: fixed;">
+                    <tr>
+                        <td><h4>Category</h4></td>
+                        <td><h4>Points Possible</h4></td>
+                        <td><h4>Points Earned</h4></td>
+                    </tr>
+                    <tr>
+                        <td>Goal</td>
+                        <td>10</td>
+                        <td>{{ form.goal_score }}</td>
+                    </tr>
+                    <tr>
+                        <td>Plan</td>
+                        <td>20</td>
+                        <td>{{ form.plan_score }}</td>
+                    </tr>
+                    <tr>
+                        <td>Action</td>
+                        <td>20</td>
+                        <td>{{ form.action_score }}</td>
+                    </tr>
+                    <tr>
+                        <td>Results and Analysis</td>
+                        <td>25</td>
+                        <td>{{ form.result_analysis_score }}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Communication
+                            <br>
+                            Notebook(s) 10
+                            <br>
+                            Poster       5
+                            <br>
+                            Interview   10
+                        </td>
+                        <td>25</td>
+                        <td>{{ form.communication_score }}</td>
+
+                    </tr>
+
+                    <tr>
+                    <td>Total</td>
+                    <td><button onclick="myFunction()">Calculate Total score </button></td>
+                    <td> {{ form.raw_score}} </td>
+
+                    </tr>
+
+
+            </table>
+
+            <script>
+
+                function goal() {
+                var a = document.getElementById("id_goal_score");
+                a.setAttribute("min", 0);
+                a.setAttribute("max", 10);
+                }
+
+                function plan() {
+                var b = document.getElementById("id_plan_score");
+                b.setAttribute("min", 0);
+                b.setAttribute("max", 20);
+                }
+
+                function action() {
+                var c = document.getElementById("id_action_score");
+                c.setAttribute("min", 0);
+                c.setAttribute("max", 20);
+                }
+
+                function analysis() {
+                var d = document.getElementById("id_result_analysis_score");
+                d.setAttribute("min", 0);
+                d.setAttribute("max", 25);
+                }
+
+                function communication() {
+                var e = document.getElementById("id_communication_score");
+                e.setAttribute("min", 0);
+                e.setAttribute("max", 25);
+                }
+
+            function myFunction() {
+            var a = parseInt(document.getElementById("id_goal_score").value);
+            var b = parseInt(document.getElementById("id_plan_score").value);
+            var c = parseInt(document.getElementById("id_action_score").value);
+            var d = parseInt(document.getElementById("id_result_analysis_score").value);
+            var e = parseInt(document.getElementById("id_communication_score").value);
+
+            var x = a + b + c + d +e;
+            document.getElementById("id_raw_score").value = x;
+            }
+
+            var judgeProjects = [];
+            var allProjects = [];
+            function sortProjectBasedOnJudge() {
+                goal();
+                plan();
+                action();
+                analysis();
+                communication();
+                var judgeElement =  document.getElementById("id_judge_id");
+                var projectElement =  document.getElementById("id_project_id");
+                allProjects = getAllProjects(projectElement);
+                judgeElement.onchange = function(){
+                    var projects = getProjectsBasedOnJudge(judgeElement.value);
+                    filterProjects(projects)
+                };
+
+                {% for ja_item in ja_items %}
+                  var judgeProject = {
+                      id: '{{ja_item.id}}',
+                      project_id: '{{ja_item.project_id.project_id}}',
+                      judge_id: '{{ja_item.judge_id.judge_id}}'
+                  }
+                  judgeProjects.push(judgeProject);
+                {% endfor %}
+            }
+
+            function getProjectsBasedOnJudge(judge_id){
+                var projects = [];
+                for(var i=0; i< judgeProjects.length; i++){
+                    if(judgeProjects[i].judge_id == judge_id)
+                    {
+                        projects.push(judgeProjects[i].project_id);
+                    }
+                }
+                return projects;
+            }
+
+            function getAllProjects(projectElement){
+                var allProjs = [];
+                for(var i=0; i< projectElement.options.length; i++){
+                    var project = {
+                        value: projectElement.options[i].value,
+                        text: projectElement.options[i].text
+                    }
+                    allProjs.push(project);
+                }
+                return allProjs;
+            }
+
+
+
+
+
+            function filterProjects(filterdProjects) {
+                var fillProjDetails = [];
+                for(var i=0; i< filterdProjects.length; i++){
+                    for(var j=0; j < allProjects.length; j++){
+                        if(filterdProjects[i] == allProjects[j].value){
+                            fillProjDetails.push({
+                                value: allProjects[j].value,
+                                text: allProjects[j].text
+                            })
+                            break;
+                        }
+                    }
+                }
+
+                var projectElement =  document.getElementById("id_project_id");
+                var length = projectElement.options.length;;
+                for(var i=1; i< length; i++){
+                    projectElement.options.remove(1);
+                }
+                for(var i=0; i< fillProjDetails.length; i++){
+                    var option = document.createElement("option");
+                    option.text = fillProjDetails[i].text;
+                    option.value = fillProjDetails[i].value;
+                    projectElement.options.add(option, (i+1));
+                }
+            }
+
+            window.onload = sortProjectBasedOnJudge;
+
+            </script>
+
+            <tr>
+                <td></td>
+                <td>
+                    <div align='center'>
+                    <input type="button" onClick="window.location.reload(true)" value="Save"  style="width: 10%; max-width: 100px;">
+                    </div>
+                </td>
+            </tr>
+        </form>
+
+
+    {% endblock content %}
