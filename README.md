@@ -40,36 +40,36 @@
 
       If you do not quit the server with Ctrl+c then, the next time you run the server, port will be different. This port should be included in CORS_ORIGIN_WHITELIST of settings.py file of the config
       
-## Installation guides for Node:
+**Installation guides for Node:**
 
     - Node Installations on all operating systems can be found in the below link:
       [https://nodejs.org/en/download/]
 
-# Getting Started with Create React App
+**Getting Started with Create React App**
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+**Available Scripts**
 
 In the project directory, you can run:
 
-### `npm start`
+**npm start**
 
-# React UI Framework
+**React UI Framework**
 
 To make use of UI I used in this project, you need to add it to the dependencies
 
-# HTTP client requests
+**HTTP client requests**
 
 To make HTTP client clients from the front end react application to the backend. I used Axios.
 
-## Available Scripts
+**Available Scripts**
 
 In the project directory, you can run:
 
 ### `npm i axios`
 
-# React Router DOM
+**React Router DOM**
 
 DOM bindings for React Router
 
