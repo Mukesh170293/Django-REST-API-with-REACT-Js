@@ -12,6 +12,23 @@
 
 6. Server: http://127.0.0.1:8000/
 
+**Django:**
+
+- In the directory you wanted to store the code, install Django with setting up virtual environment. You should always use a dedicated virtual environment for every new Python Project
+  - [ ] pipenv install django==2.2.0
+  - [ ] pipenv shell
+    > To check whether the environment is activated, it can be identified by the name of the directory within parenthesis before the command line.
+
+**Django Web Framework**:
+
+- Install Django REST Framework as following:
+  - [ ] $pipenv install djangorestframework==3.9.2
+
+**CORS**:
+
+- Install CORS for client interactions to an API hosted on a different domain as follows:
+  - [ ] $pipenv install django-cors-headers==2.5.2
+
 ## Steps to run the frontend server i.e, the React application:
 
 1. cd to the 'frontend' from your terminal. From the root directory, ***$ cd frontend***
