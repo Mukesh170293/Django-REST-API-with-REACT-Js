@@ -67,7 +67,7 @@ To make HTTP client clients from the front end react application to the backend.
 
 In the project directory, you can run:
 
-### `npm i axios`
+ - [ ] `npm i axios`
 
 **React Router DOM**
 
@@ -76,8 +76,7 @@ DOM bindings for React Router
 ##Installation
 
 In the project directory, you can run:
-
-### `npm install --save react-router-dom`
+ - [ ] `npm install --save react-router-dom`
 
 ___________
 
